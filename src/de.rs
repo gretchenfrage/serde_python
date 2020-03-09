@@ -256,21 +256,21 @@ impl<'de, R: Read<'de>> Deserializer<R> {
     #[cold]
     fn peek_invalid_type(&mut self, exp: &dyn Expected) -> Error {
         let err = match self.peek_or_null().unwrap_or(b'\x00') {
-            b'n' => {
+            b'N' => {
                 self.eat_char();
-                if let Err(err) = self.parse_ident(b"ull") {
+                if let Err(err) = self.parse_ident(b"one") {
                     return err;
                 }
                 de::Error::invalid_type(Unexpected::Unit, exp)
             }
-            b't' => {
+            b'T' => {
                 self.eat_char();
                 if let Err(err) = self.parse_ident(b"rue") {
                     return err;
                 }
                 de::Error::invalid_type(Unexpected::Bool(true), exp)
             }
-            b'f' => {
+            b'F' => {
                 self.eat_char();
                 if let Err(err) = self.parse_ident(b"alse") {
                     return err;
@@ -831,17 +831,17 @@ impl<'de, R: Read<'de>> Deserializer<R> {
             };
 
             let frame = match peek {
-                b'n' => {
+                b'N' => {
                     self.eat_char();
-                    tri!(self.parse_ident(b"ull"));
+                    tri!(self.parse_ident(b"one"));
                     None
                 }
-                b't' => {
+                b'T' => {
                     self.eat_char();
                     tri!(self.parse_ident(b"rue"));
                     None
                 }
-                b'f' => {
+                b'F' => {
                     self.eat_char();
                     tri!(self.parse_ident(b"alse"));
                     None
@@ -1118,17 +1118,17 @@ impl<'de, 'a, R: Read<'de>> de::Deserializer<'de> for &'a mut Deserializer<R> {
         };
 
         let value = match peek {
-            b'n' => {
+            b'N' => {
                 self.eat_char();
-                tri!(self.parse_ident(b"ull"));
+                tri!(self.parse_ident(b"one"));
                 visitor.visit_unit()
             }
-            b't' => {
+            b'T' => {
                 self.eat_char();
                 tri!(self.parse_ident(b"rue"));
                 visitor.visit_bool(true)
             }
-            b'f' => {
+            b'F' => {
                 self.eat_char();
                 tri!(self.parse_ident(b"alse"));
                 visitor.visit_bool(false)
@@ -1194,12 +1194,12 @@ impl<'de, 'a, R: Read<'de>> de::Deserializer<'de> for &'a mut Deserializer<R> {
         };
 
         let value = match peek {
-            b't' => {
+            b'T' => {
                 self.eat_char();
                 tri!(self.parse_ident(b"rue"));
                 visitor.visit_bool(true)
             }
-            b'f' => {
+            b'F' => {
                 self.eat_char();
                 tri!(self.parse_ident(b"alse"));
                 visitor.visit_bool(false)
@@ -1447,9 +1447,9 @@ impl<'de, 'a, R: Read<'de>> de::Deserializer<'de> for &'a mut Deserializer<R> {
         V: de::Visitor<'de>,
     {
         match tri!(self.parse_whitespace()) {
-            Some(b'n') => {
+            Some(b'N') => {
                 self.eat_char();
-                tri!(self.parse_ident(b"ull"));
+                tri!(self.parse_ident(b"one"));
                 visitor.visit_none()
             }
             _ => visitor.visit_some(self),
@@ -1468,9 +1468,9 @@ impl<'de, 'a, R: Read<'de>> de::Deserializer<'de> for &'a mut Deserializer<R> {
         };
 
         let value = match peek {
-            b'n' => {
+            b'N' => {
                 self.eat_char();
-                tri!(self.parse_ident(b"ull"));
+                tri!(self.parse_ident(b"one"));
                 visitor.visit_unit()
             }
             _ => Err(self.peek_invalid_type(&visitor)),

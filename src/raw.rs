@@ -139,7 +139,7 @@ impl ToOwned for RawValue {
 
 impl Default for Box<RawValue> {
     fn default() -> Self {
-        RawValue::from_borrowed("null").to_owned()
+        RawValue::from_borrowed("None").to_owned()
     }
 }
 

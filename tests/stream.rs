@@ -118,7 +118,7 @@ fn test_json_stream_empty() {
 
 #[test]
 fn test_json_stream_primitive() {
-    let data = "{} true{}1[]\nfalse\"hey\"2 ";
+    let data = "{} True{}1[]\nFalse\"hey\"2 ";
 
     test_stream!(data, Value, |stream| {
         assert_eq!(stream.next().unwrap().unwrap(), json!({}));
@@ -152,7 +152,7 @@ fn test_json_stream_primitive() {
 
 #[test]
 fn test_json_stream_invalid_literal() {
-    let data = "truefalse";
+    let data = "TrueFalse";
 
     test_stream!(data, Value, |stream| {
         let second = stream.next().unwrap().unwrap_err();
@@ -162,7 +162,7 @@ fn test_json_stream_invalid_literal() {
 
 #[test]
 fn test_json_stream_invalid_number() {
-    let data = "1true";
+    let data = "1True";
 
     test_stream!(data, Value, |stream| {
         let second = stream.next().unwrap().unwrap_err();

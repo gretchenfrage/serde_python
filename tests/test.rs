@@ -96,7 +96,7 @@ where
 
 #[test]
 fn test_write_null() {
-    let tests = &[((), "null")];
+    let tests = &[((), "None")];
     test_encode_ok(tests);
     test_pretty_encode_ok(tests);
 }
@@ -159,7 +159,7 @@ fn test_write_str() {
 
 #[test]
 fn test_write_bool() {
-    let tests = &[(true, "true"), (false, "false")];
+    let tests = &[(true, "True"), (false, "False")];
     test_encode_ok(tests);
     test_pretty_encode_ok(tests);
 }
@@ -187,8 +187,8 @@ fn test_write_char() {
 fn test_write_list() {
     test_encode_ok(&[
         (vec![], "[]"),
-        (vec![true], "[true]"),
-        (vec![true, false], "[true,false]"),
+        (vec![true], "[True]"),
+        (vec![true, false], "[True,False]"),
     ]);
 
     test_encode_ok(&[
@@ -216,20 +216,20 @@ fn test_write_list() {
 
     test_pretty_encode_ok(&[
         (vec![], "[]"),
-        (vec![true], pretty_str!([true])),
-        (vec![true, false], pretty_str!([true, false])),
+        (vec![true], pretty_str!([True])),
+        (vec![true, false], pretty_str!([True, False])),
     ]);
 
     let long_test_list = json!([false, null, ["foo\nbar", 3.5]]);
 
     test_encode_ok(&[(
         long_test_list.clone(),
-        json_str!([false, null, ["foo\nbar", 3.5]]),
+        json_str!([False, None, ["foo\nbar", 3.5]]),
     )]);
 
     test_pretty_encode_ok(&[(
         long_test_list,
-        pretty_str!([false, null, ["foo\nbar", 3.5]]),
+        pretty_str!([False, None, ["foo\nbar", 3.5]]),
     )]);
 }
 
@@ -237,13 +237,13 @@ fn test_write_list() {
 fn test_write_object() {
     test_encode_ok(&[
         (treemap!(), "{}"),
-        (treemap!("a".to_string() => true), "{\"a\":true}"),
+        (treemap!("a".to_string() => true), "{\"a\":True}"),
         (
             treemap!(
                 "a".to_string() => true,
                 "b".to_string() => false
             ),
-            "{\"a\":true,\"b\":false}",
+            "{\"a\":True,\"b\":False}",
         ),
     ]);
 
@@ -294,7 +294,7 @@ fn test_write_object() {
         ),
     ]);
 
-    test_encode_ok(&[(treemap!['c' => ()], "{\"c\":null}")]);
+    test_encode_ok(&[(treemap!['c' => ()], "{\"c\":None}")]);
 
     test_pretty_encode_ok(&[
         (
@@ -394,7 +394,7 @@ fn test_write_object() {
         (
             treemap!("a".to_string() => true),
             pretty_str!({
-                "a": true
+                "a": True
             }),
         ),
         (
@@ -403,8 +403,8 @@ fn test_write_object() {
                 "b".to_string() => false
             ),
             pretty_str!( {
-                "a": true,
-                "b": false
+                "a": True,
+                "b": False
             }),
         ),
     ]);
@@ -524,17 +524,17 @@ fn test_write_enum() {
 
 #[test]
 fn test_write_option() {
-    test_encode_ok(&[(None, "null"), (Some("jodhpurs"), "\"jodhpurs\"")]);
+    test_encode_ok(&[(None, "None"), (Some("jodhpurs"), "\"jodhpurs\"")]);
 
     test_encode_ok(&[
-        (None, "null"),
+        (None, "None"),
         (Some(vec!["foo", "bar"]), "[\"foo\",\"bar\"]"),
     ]);
 
-    test_pretty_encode_ok(&[(None, "null"), (Some("jodhpurs"), "\"jodhpurs\"")]);
+    test_pretty_encode_ok(&[(None, "None"), (Some("jodhpurs"), "\"jodhpurs\"")]);
 
     test_pretty_encode_ok(&[
-        (None, "null"),
+        (None, "None"),
         (Some(vec!["foo", "bar"]), pretty_str!(["foo", "bar"])),
     ]);
 }
@@ -662,30 +662,30 @@ where
 #[test]
 fn test_parse_null() {
     test_parse_err::<()>(&[
-        ("n", "EOF while parsing a value at line 1 column 1"),
-        ("nul", "EOF while parsing a value at line 1 column 3"),
-        ("nulla", "trailing characters at line 1 column 5"),
+        ("N", "EOF while parsing a value at line 1 column 1"),
+        ("Non", "EOF while parsing a value at line 1 column 3"),
+        ("Nonea", "trailing characters at line 1 column 5"),
     ]);
 
-    test_parse_ok(vec![("null", ())]);
+    test_parse_ok(vec![("None", ())]);
 }
 
 #[test]
 fn test_parse_bool() {
     test_parse_err::<bool>(&[
-        ("t", "EOF while parsing a value at line 1 column 1"),
-        ("truz", "expected ident at line 1 column 4"),
-        ("f", "EOF while parsing a value at line 1 column 1"),
-        ("faz", "expected ident at line 1 column 3"),
-        ("truea", "trailing characters at line 1 column 5"),
-        ("falsea", "trailing characters at line 1 column 6"),
+        ("T", "EOF while parsing a value at line 1 column 1"),
+        ("Truz", "expected ident at line 1 column 4"),
+        ("F", "EOF while parsing a value at line 1 column 1"),
+        ("Faz", "expected ident at line 1 column 3"),
+        ("Truea", "trailing characters at line 1 column 5"),
+        ("Falsea", "trailing characters at line 1 column 6"),
     ]);
 
     test_parse_ok(vec![
-        ("true", true),
-        (" true ", true),
-        ("false", false),
-        (" false ", false),
+        ("True", true),
+        (" True ", true),
+        ("False", false),
+        (" False ", false),
     ]);
 }
 
@@ -1052,11 +1052,11 @@ fn test_parse_list() {
     test_parse_ok(vec![
         ("[]", vec![]),
         ("[ ]", vec![]),
-        ("[null]", vec![()]),
-        (" [ null ] ", vec![()]),
+        ("[None]", vec![()]),
+        (" [ None ] ", vec![()]),
     ]);
 
-    test_parse_ok(vec![("[true]", vec![true])]);
+    test_parse_ok(vec![("[True]", vec![true])]);
 
     test_parse_ok(vec![("[3,1]", vec![3u64, 1]), (" [ 3 , 1 ] ", vec![3, 1])]);
 
@@ -1113,7 +1113,7 @@ fn test_parse_object() {
         ),
     )]);
 
-    test_parse_ok(vec![("{\"c\":null}", treemap!('c' => ()))]);
+    test_parse_ok(vec![("{\"c\":None}", treemap!('c' => ()))]);
 }
 
 #[test]
@@ -1132,7 +1132,7 @@ fn test_parse_struct() {
             "invalid type: string \"hello\", expected struct Outer at line 1 column 7",
         ),
         (
-            "{\"inner\": true}",
+            "{\"inner\": True}",
             "invalid type: boolean `true`, expected a sequence at line 1 column 14",
         ),
         ("{}", "missing field `inner` at line 1 column 2"),
@@ -1152,7 +1152,7 @@ fn test_parse_struct() {
         (
             "{
                 \"inner\": [
-                    { \"a\": null, \"b\": 2, \"c\": [\"abc\", \"xyz\"] }
+                    { \"a\": None, \"b\": 2, \"c\": [\"abc\", \"xyz\"] }
                 ]
             }",
             Outer {
@@ -1168,7 +1168,7 @@ fn test_parse_struct() {
     let v: Outer = from_str(
         "[
             [
-                [ null, 2, [\"abc\", \"xyz\"] ]
+                [ None, 2, [\"abc\", \"xyz\"] ]
             ]
         ]",
     )
@@ -1193,7 +1193,7 @@ fn test_parse_struct() {
 #[test]
 fn test_parse_option() {
     test_parse_ok(vec![
-        ("null", None::<String>),
+        ("None", None::<String>),
         ("\"jodhpurs\"", Some("jodhpurs".to_string())),
     ]);
 
@@ -1206,7 +1206,7 @@ fn test_parse_option() {
     assert_eq!(value, Foo { x: None });
 
     test_parse_ok(vec![
-        ("{\"x\": null}", Foo { x: None }),
+        ("{\"x\": None}", Foo { x: None }),
         ("{\"x\": 5}", Foo { x: Some(5) }),
     ]);
 }
@@ -1219,7 +1219,7 @@ fn test_parse_enum_errors() {
             ("[]", "expected value at line 1 column 1"),
             ("\"unknown\"",
              "unknown variant `unknown`, expected one of `Dog`, `Frog`, `Cat`, `AntHive` at line 1 column 9"),
-            ("{\"unknown\":null}",
+            ("{\"unknown\":None}",
              "unknown variant `unknown`, expected one of `Dog`, `Frog`, `Cat`, `AntHive` at line 1 column 10"),
             ("{\"Dog\":", "EOF while parsing a value at line 1 column 7"),
             ("{\"Dog\":}", "expected value at line 1 column 8"),
@@ -1276,8 +1276,8 @@ fn test_parse_enum() {
     ]);
 
     test_parse_unusual_ok(vec![
-        ("{\"Dog\":null}", Animal::Dog),
-        (" { \"Dog\" : null } ", Animal::Dog),
+        ("{\"Dog\":None}", Animal::Dog),
+        (" { \"Dog\" : None } ", Animal::Dog),
     ]);
 
     test_parse_ok(vec![(
@@ -1777,7 +1777,7 @@ fn test_integer_key() {
     test_encode_ok(&[(&map, j)]);
     test_parse_ok(vec![(j, map)]);
 
-    let j = r#"{"x":null}"#;
+    let j = r#"{"x":None}"#;
     test_parse_err::<BTreeMap<i32, ()>>(&[(
         j,
         "invalid type: string \"x\", expected i32 at line 1 column 4",
@@ -1789,7 +1789,7 @@ fn test_integer128_key() {
     let map = treemap! {
         100000000000000000000000000000000000000u128 => ()
     };
-    let j = r#"{"100000000000000000000000000000000000000":null}"#;
+    let j = r#"{"100000000000000000000000000000000000000":None}"#;
     assert_eq!(to_string(&map).unwrap(), j);
     assert_eq!(from_str::<BTreeMap<u128, ()>>(j).unwrap(), map);
 }
@@ -1814,14 +1814,14 @@ fn test_deny_float_key() {
 
 #[test]
 fn test_borrowed_key() {
-    let map: BTreeMap<&str, ()> = from_str("{\"borrowed\":null}").unwrap();
+    let map: BTreeMap<&str, ()> = from_str("{\"borrowed\":None}").unwrap();
     let expected = treemap! { "borrowed" => () };
     assert_eq!(map, expected);
 
     #[derive(Deserialize, Debug, Ord, PartialOrd, Eq, PartialEq)]
     struct NewtypeStr<'a>(&'a str);
 
-    let map: BTreeMap<NewtypeStr, ()> = from_str("{\"borrowed\":null}").unwrap();
+    let map: BTreeMap<NewtypeStr, ()> = from_str("{\"borrowed\":None}").unwrap();
     let expected = treemap! { NewtypeStr("borrowed") => () };
     assert_eq!(map, expected);
 }
@@ -1936,7 +1936,7 @@ fn test_partialeq_bool() {
     assert_eq!(v, true);
     assert_eq!(true, v);
     assert_ne!(v, false);
-    assert_ne!(v, "true");
+    assert_ne!(v, "True");
     assert_ne!(v, 1);
     assert_ne!(v, 0);
 }
@@ -2018,7 +2018,7 @@ fn test_borrow() {
 
 #[test]
 fn null_invalid_type() {
-    let err = serde_json::from_str::<String>("null").unwrap_err();
+    let err = serde_json::from_str::<String>("None").unwrap_err();
     assert_eq!(
         format!("{}", err),
         String::from("invalid type: null, expected a string at line 1 column 4")
@@ -2086,14 +2086,14 @@ fn test_borrowed_raw_value() {
     assert_eq!(json!({"a": 1, "b": {"foo": 2}, "c": 3}), wrapper_to_value);
 
     let array_from_str: Vec<&RawValue> =
-        serde_json::from_str(r#"["a", 42, {"foo": "bar"}, null]"#).unwrap();
+        serde_json::from_str(r#"["a", 42, {"foo": "bar"}, None]"#).unwrap();
     assert_eq!(r#""a""#, array_from_str[0].get());
     assert_eq!(r#"42"#, array_from_str[1].get());
     assert_eq!(r#"{"foo": "bar"}"#, array_from_str[2].get());
-    assert_eq!(r#"null"#, array_from_str[3].get());
+    assert_eq!(r#"None"#, array_from_str[3].get());
 
     let array_to_string = serde_json::to_string(&array_from_str).unwrap();
-    assert_eq!(r#"["a",42,{"foo": "bar"},null]"#, array_to_string);
+    assert_eq!(r#"["a",42,{"foo": "bar"},None]"#, array_to_string);
 }
 
 #[cfg(feature = "raw_value")]
@@ -2127,21 +2127,21 @@ fn test_boxed_raw_value() {
     assert_eq!(json!({"a": 1, "b": {"foo": 2}, "c": 3}), wrapper_to_value);
 
     let array_from_str: Vec<Box<RawValue>> =
-        serde_json::from_str(r#"["a", 42, {"foo": "bar"}, null]"#).unwrap();
+        serde_json::from_str(r#"["a", 42, {"foo": "bar"}, None]"#).unwrap();
     assert_eq!(r#""a""#, array_from_str[0].get());
     assert_eq!(r#"42"#, array_from_str[1].get());
     assert_eq!(r#"{"foo": "bar"}"#, array_from_str[2].get());
-    assert_eq!(r#"null"#, array_from_str[3].get());
+    assert_eq!(r#"None"#, array_from_str[3].get());
 
     let array_from_reader: Vec<Box<RawValue>> =
-        serde_json::from_reader(br#"["a", 42, {"foo": "bar"}, null]"#.as_ref()).unwrap();
+        serde_json::from_reader(br#"["a", 42, {"foo": "bar"}, None]"#.as_ref()).unwrap();
     assert_eq!(r#""a""#, array_from_reader[0].get());
     assert_eq!(r#"42"#, array_from_reader[1].get());
     assert_eq!(r#"{"foo": "bar"}"#, array_from_reader[2].get());
-    assert_eq!(r#"null"#, array_from_reader[3].get());
+    assert_eq!(r#"None"#, array_from_reader[3].get());
 
     let array_to_string = serde_json::to_string(&array_from_str).unwrap();
-    assert_eq!(r#"["a",42,{"foo": "bar"},null]"#, array_to_string);
+    assert_eq!(r#"["a",42,{"foo": "bar"},None]"#, array_to_string);
 }
 
 #[test]

@@ -10,7 +10,7 @@ fn test_preserve_order() {
     #[cfg(feature = "preserve_order")]
     const EXPECTED: &[&str] = &["b", "a", "c"];
 
-    let v: Value = from_str(r#"{"b":null,"a":null,"c":null}"#).unwrap();
+    let v: Value = from_str(r#"{"b":None,"a":None,"c":None}"#).unwrap();
     let keys: Vec<_> = v.as_object().unwrap().keys().collect();
     assert_eq!(keys, EXPECTED);
 }
@@ -25,7 +25,7 @@ fn test_append() {
     #[cfg(feature = "preserve_order")]
     const EXPECTED: &[&str] = &["b", "a", "c"];
 
-    let mut v: Value = from_str(r#"{"b":null,"a":null,"c":null}"#).unwrap();
+    let mut v: Value = from_str(r#"{"b":None,"a":None,"c":None}"#).unwrap();
     let val = v.as_object_mut().unwrap();
     let mut m = Map::new();
     m.append(val);
